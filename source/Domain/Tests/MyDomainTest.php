@@ -12,12 +12,22 @@ use Source\Domain\Model\MyDomain;
  */
 class MyDomainTest extends TestCase
 {
+    /**
+     * @covers Source\Domain\Model\MyDomain
+     *
+     * @return void
+     */
     public function testCalculate()
     {
         $myDomain = new MyDomain();
         $this->assertEquals(4, $myDomain->calculate(2));
     }
 
+    /**
+     * @covers Source\Domain\Model\MyDomain
+     *
+     * @return void
+     */
     public function testIsString()
     {
         $myDomain = new MyDomain();

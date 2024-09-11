@@ -1,6 +1,6 @@
 services:
-  php-apache-framework-php:
-    container_name: php-apache-framework-php
+  framework-php-8:
+    container_name: php-apache-8
     volumes:
       - ./:/var/www/html
     ports:

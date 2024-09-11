@@ -7,3 +7,4 @@ sql
 coverage
 .phpunit.result.cache
 source/Scripts/config/
+.phpunit.cache

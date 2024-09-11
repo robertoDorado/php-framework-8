@@ -1,5 +1,5 @@
 #  PHP Drivers
-FROM php:7.4-apache
+FROM php:8.2-apache
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 
 # Definir o diretório de trabalho
@@ -47,7 +47,7 @@ RUN service apache2 restart
 RUN chown -R www-data:www-data /var/www/html/
 
 # Instalação do Xdebug
-RUN pecl install xdebug-3.0.4 \
+RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
 
 # Ativar o módulo rewrite
