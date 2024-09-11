@@ -1,0 +1,30 @@
+services:
+  php-apache-framework-php:
+    container_name: php-apache-framework-php
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - db-framework-php
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - app-network
+  db-framework-php:
+    image: mysql:5.7
+    container_name: mysql-framework-php
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: framework_php
+    networks:
+      - app-network
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+networks:
+  app-network:
+    driver: bridge
