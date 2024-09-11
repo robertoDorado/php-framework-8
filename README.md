@@ -12,5 +12,5 @@ Este projeto está na versão **8.2** e está configurado para rodar com **Docke
 
 ```bash
 git clone https://github.com/robertoDorado/php-framework-8.git
-cd seu-repositorio
+cd php-framework-8
 docker-compose up -d
