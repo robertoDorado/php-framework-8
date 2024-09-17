@@ -99,10 +99,10 @@ function redirect(string $url): void
 function filter_type(): array
 {
     $filterFields = [
-        "route" => FILTER_SANITIZE_STRIPPED,
+        "route" => FILTER_SANITIZE_SPECIAL_CHARS,
         "product" => FILTER_SANITIZE_NUMBER_INT,
         "product_id" => FILTER_SANITIZE_NUMBER_INT,
-        "country" => FILTER_SANITIZE_STRIPPED,
+        "country" => FILTER_SANITIZE_SPECIAL_CHARS,
         "device" => FILTER_SANITIZE_NUMBER_INT,
         "redirect" => FILTER_SANITIZE_ENCODED,
         "status" => FILTER_SANITIZE_NUMBER_INT,
@@ -130,7 +130,7 @@ function filter_array(array $array): array
         if (in_array($key, array_keys($filterFields))) {
             $filterArr[$key] = $filterFields[$key];
         } else {
-            $filterArr[$key] = FILTER_SANITIZE_STRIPPED;
+            $filterArr[$key] = FILTER_SANITIZE_SPECIAL_CHARS;
         }
     }
     return filter_var_array($array, $filterArr);
@@ -151,12 +151,12 @@ function filter_variable(string $string, $type = null): string
         } elseif ($type == 'int') {
             return filter_var($string, FILTER_SANITIZE_NUMBER_INT);
         } elseif ($type == 'string') {
-            return filter_var($string, FILTER_SANITIZE_STRING);
+            return filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS);
         } elseif ($type == 'chars') {
             return filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS);
         } elseif ($type == 'mail' || $type == 'email') {
             return filter_var($string, FILTER_VALIDATE_EMAIL);
         }
     }
-    return filter_var($string, FILTER_SANITIZE_STRIPPED);
+    return filter_var($string, FILTER_SANITIZE_SPECIAL_CHARS);
 }
