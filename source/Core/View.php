@@ -42,6 +42,14 @@ class View
      */
     public function render(string $templateName, array $data): string
     {
+        if (preg_match("/\//", $templateName)) {
+            $templateNameArray = explode("/", $templateName);
+            $templateName = array_pop($templateNameArray);
+            
+            foreach ($templateNameArray as $template) {
+                $this->engine->addData($data, $template);
+            }
+        }
         return $this->engine->render($templateName, $data);
     }
 
