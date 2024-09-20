@@ -12,16 +12,14 @@ use Source\Models\TestModel as ModelsTestModel;
  * @author Roberto Dorado <robertodorado7@gmail.com>
  * @package Source\Migrations
  */
-class TestModel
+class TestModel extends DDL
 {
-    /** @var DDL Data Definition Language */
-    private DDL $ddl;
     /**
      * TestModel constructor
      */
     public function __construct()
     {
-        $this->ddl = new DDL(ModelsTestModel::class);
+        parent::__construct(ModelsTestModel::class);
     }
 
     /**
@@ -31,9 +29,9 @@ class TestModel
      */
     public function modifyVarcharColumnD()
     {
-        $this->ddl->alterTable(["MODIFY COLUMN column_d VARCHAR(1000) NOT NULL"]);
-        // return $this->ddl->getQuery(); # Debug da Query DDL
-        $this->ddl->executeQuery();
+        $this->alterTable(["MODIFY COLUMN column_d VARCHAR(1000) NOT NULL"]);
+        // return $this->getQuery(); # Debug da Query DDL
+        $this->executeQuery();
     }
 
     /**
@@ -43,12 +41,12 @@ class TestModel
      */
     public function defineTable()
     {
-        $this->ddl->setClassProperties();
-        $this->ddl->setKeysToProperties(["BIGINT AUTO_INCREMENT PRIMARY KEY", "VARCHAR(255) NOT NULL",
+        $this->setClassProperties();
+        $this->setKeysToProperties(["BIGINT AUTO_INCREMENT PRIMARY KEY", "VARCHAR(255) NOT NULL",
         "VARCHAR(255) NOT NULL", "VARCHAR(255) NOT NULL", "VARCHAR(255) NOT NULL"]);
-        $this->ddl->dropTableIfExists()->createTableQuery();
-        // return $this->ddl->getQuery(); # Debug da Query DDL
-        $this->ddl->executeQuery();
+        $this->dropTableIfExists()->createTableQuery();
+        // return $this->getQuery(); # Debug da Query DDL
+        $this->executeQuery();
     }
 }
 executeMigrations(TestModel::class);
