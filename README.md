@@ -1,6 +1,6 @@
 # PHP 8.2 Framework
 
-This project is in version 8.2 and is configured to run with Docker. PHPUnit is already configured for unit testing.
+This project is in version **8.2** and is configured to run with **Docker**. PHPUnit is already configured for unit testing.
 
 ## Requirements
 
