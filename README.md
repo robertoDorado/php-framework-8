@@ -1,52 +1,52 @@
 # Framework PHP 8.2
 
-Este projeto está na versão **8.2** e está configurado para rodar com **Docker**. O PHPUnit já está configurado para testes unitários.
+This project is in version 8.2 and is configured to run with Docker. PHPUnit is already configured for unit testing.
 
-## Requisitos
+## Requirements
 
-- Docker e Docker Compose instalados em sua máquina.
+- Docker and Docker Compose installed on your machine.
 
-## Instalação do projeto na máquina
+## Project installation on your machine
 
-1. Instalação do ssl em ambiente local
+1. SSL installation in a local environment.
 
-Este guia explica como instalar o `mkcert` em uma máquina Windows utilizando o Chocolatey.
+This guide explains how to install mkcert on a Windows machine using Chocolatey.
 
-2. Instale o Chocolatey. Se você ainda não possui o Chocolatey instalado, siga as instruções abaixo:
+2. Install Chocolatey. If you don't already have Chocolatey installed, follow the steps below:
 
-3. Abra o PowerShell **como administrador**. Para isso, clique com o botão direito no ícone do PowerShell e selecione **"Executar como administrador"**.
+3. Open PowerShell **as Administrator.** To do this, right-click the PowerShell icon and select **"Run as administrator".**
 
-4. Execute o comando abaixo para instalar o Chocolatey:
+4. Run the following command to install Chocolatey:
 
     ```powershell
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
     ```
 
-## Instalar o mkcert usando o Chocolatey
+## Install mkcert using Chocolatey
 
-1. Após instalar o Chocolatey, no mesmo PowerShell **com permissões de administrador**, execute o comando abaixo para instalar o `mkcert`:
+1. After installing Chocolatey, in the same PowerShell **with administrator permissions**, run the following command to install `mkcert`:
 
     ```powershell
     choco install mkcert -y
     ```
 
-## Verificação
+## Verification
 
-Para verificar se o `mkcert` foi instalado corretamente, você pode executar:
+To verify if `mkcert` was installed correctly, you can run:
 
    ```powershell
    mkcert -CAROOT
    ```
 
-## Configuração do projeto
+## Project Configuration
 
-1. Clone este repositório
+1. Clone this repository
 
    ```bash
    git clone https://github.com/robertoDorado/php-framework-8.git
    ```
 
-2. Após a instalação do mkcert na máquina local, faça a instalação da CA na pasta ssl
+2. After installing mkcert on your local machine, install the CA in the ssl folder
 
    ```powershell
    cd php-framework-8
@@ -55,7 +55,7 @@ Para verificar se o `mkcert` foi instalado corretamente, você pode executar:
    mkcert -install localhost
    ```
 
-3. Execute o projeto e atualize as dependências
+3. Run the project and update the dependencies
 
    ```docker
    docker-compose up -d
@@ -63,7 +63,7 @@ Para verificar se o `mkcert` foi instalado corretamente, você pode executar:
    composer update
    ```
 
-4. Execute as migrations dentro do container
+4. Run the migrations inside the container
 
    ```docker
    docker exec -it php-apache-8 /bin/bash
