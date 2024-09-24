@@ -1,4 +1,5 @@
 <?php
+
 namespace Source\Migrations\Core;
 
 use InvalidArgumentException;
@@ -44,7 +45,7 @@ abstract class DDL
         }
 
         $this->classProperties = $this->reflectionClass->getProperties();
-        
+
         $getName = function ($property) {
             if ($property->class == $this->class) {
                 return $property->name;
@@ -56,7 +57,7 @@ abstract class DDL
                 return $property;
             }
         };
-        
+
         $this->classProperties = array_map($getName, $this->classProperties);
         $this->classProperties = array_filter($this->classProperties, $filterEmpty);
         $this->classProperties = transformCamelCaseToSnakeCase($this->classProperties);
@@ -73,7 +74,7 @@ abstract class DDL
 
     public function setClassName(string $className)
     {
-        $this->className = $className; 
+        $this->className = $className;
     }
 
     public function getClassName()
@@ -82,17 +83,15 @@ abstract class DDL
             throw new \Exception("A instancia precisa ser do tipo ReflectionClass.");
         }
 
-        if (empty($this->className)) {
-            if (preg_match("/\\\/", basename($this->reflectionClass->getName()))) {
-                $explodeArray = explode("\\", basename($this->reflectionClass->getName()));
-                $transformedString = array_pop($explodeArray);
-                $transformedString = preg_replace('/([a-z])([A-Z])/', '$1_$2', $transformedString);
-            }else {
-                $transformedString = preg_replace('/([a-z])([A-Z])/', '$1_$2', basename($this->reflectionClass->getName()));
-            }
-            $this->className = strtolower($transformedString);
+        if (preg_match("/\\\/", basename($this->reflectionClass->getName()))) {
+            $explodeArray = explode("\\", basename($this->reflectionClass->getName()));
+            $transformedString = array_pop($explodeArray);
+            $transformedString = preg_replace('/([a-z])([A-Z])/', '$1_$2', $transformedString);
+        } else {
+            $transformedString = preg_replace('/([a-z])([A-Z])/', '$1_$2', basename($this->reflectionClass->getName()));
         }
 
+        $this->className = strtolower($transformedString);
         return $this->className;
     }
 
@@ -106,7 +105,7 @@ abstract class DDL
             throw new InvalidArgumentException("Os arrays devem ter o mesmo número de elementos.");
         }
 
-        foreach($this->classProperties as $key => &$value) {
+        foreach ($this->classProperties as $key => &$value) {
             $value = $value . " " . $dataType[$key];
         }
     }
@@ -122,17 +121,32 @@ abstract class DDL
             throw new \Exception("A instancia precisa ser do tipo ReflectionClass.");
         }
 
-        try{
-            return Connect::getInstance()->exec($this->sql);
-        }catch(\PDOException $e) {
-            throw new \Exception($e->getMessage());
-        }
+        $executeQuery = function (string $query) {
+            $stmts = explode(";", $query);
+            $stmts = array_map(function ($item) {
+                return trim($item);
+            }, $stmts);
+
+            $stmts = array_filter($stmts, function ($item) {
+                return !empty($item);
+            });
+
+            foreach ($stmts as $sql) {
+                try {
+                    Connect::getInstance()->exec($sql);
+                } catch (\PDOException $e) {
+                    throw new \Exception($e->getMessage());
+                }
+            }
+        };
+
+        $executeQuery($this->sql);
     }
 
     public function alterTable(array $params)
     {
-        $this->sql .= " ALTER TABLE " . strtolower($this->getClassName()) . " ";
-        $this->sql .= implode(",", $params) . "; ";
+        $this->sql = " ALTER TABLE " . $this->getClassName() . " ";
+        $this->sql .= implode(", ", $params) . ";";
         return $this;
     }
 
@@ -144,7 +158,7 @@ abstract class DDL
 
     public function dropTableIfExists()
     {
-        $this->sql .= " DROP TABLE IF EXISTS " . strtolower($this->getClassName()) . "; ";
+        $this->sql .= " DROP TABLE IF EXISTS " . $this->getClassName() . "; ";
         return $this;
     }
 
@@ -155,7 +169,7 @@ abstract class DDL
         }
 
         $params = "(" . implode(", ", $this->classProperties) . ")";
-        $this->sql .= " CREATE TABLE IF NOT EXISTS " . strtolower($this->getClassName()) . " " . $params ."; ";
+        $this->sql .= " CREATE TABLE IF NOT EXISTS " . $this->getClassName() . " " . $params . "; ";
         return $this;
     }
 

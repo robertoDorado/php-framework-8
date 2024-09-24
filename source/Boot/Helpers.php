@@ -6,10 +6,10 @@ function executeMigrations(string $instance)
     $object = new $instance();
     $classMethods = get_class_methods($instance);
     $ddlClassMethods = get_class_methods(\Source\Migrations\Core\DDL::class);
-    
+
     $diffMethods = array_diff($classMethods, $ddlClassMethods);
     $methods = array_reverse($diffMethods);
-    
+
     foreach ($methods as $method) {
         if ($method != "__construct") {
             echo "EXECUTANDO: " . $method . "\n";
@@ -21,7 +21,7 @@ function executeMigrations(string $instance)
 
 function transformCamelCaseToSnakeCase(array $args)
 {
-    foreach($args as &$originalString) {
+    foreach ($args as &$originalString) {
         $transformedString = preg_replace('/([a-z])([A-Z])/', '$1_$2', $originalString);
         $originalString = strtolower($transformedString);
     }
