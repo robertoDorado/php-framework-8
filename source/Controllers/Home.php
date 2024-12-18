@@ -2,6 +2,8 @@
 
 namespace Source\Controllers;
 
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Source\Core\Controller;
 
 /**
@@ -15,30 +17,50 @@ class Home extends Controller
         parent::__construct();
     }
 
-    /**
-     * Home
-     * 
-     * @return array
-     */
-
-    public function index(): void
+    public function formAjax(Request $request, Response $response)
     {
-        echo $this->view->render("home", [
-            "title" => "Home"
-        ]);
+        if ($this->getServer()->getServerByKey("REQUEST_METHOD") == "POST") {
+            $request = $this->getRequests()->configureDataPost()->setRequiredFields([
+                "writeName",
+                "csrfToken"
+            ])->getAllPostData();
+            
+            $response->getBody()->write(json_encode($request));
+            return $response->withStatus(200);
+        }
+
+        $response->getBody()->write($this->view->render("form_ajax", []));
+        return $response;
+    }
+
+    public function form(Request $request, Response $response)
+    {
+        if ($this->getServer()->getServerByKey("REQUEST_METHOD") == "POST") {
+            $request = $this->getRequests()->configureDataPost()->setRequiredFields([
+                "writeName",
+                "csrfToken"
+            ])->getAllPostData();
+            
+            print_r($request ?? []);
+            die;
+        }
+
+        $response->getBody()->write($this->view->render("form", []));
+        return $response;
     }
 
     /**
-     * Error
+     * Index Home
      *
-     * @param array $data
-     * @return void
+     * @param Request $request
+     * @param Response $response
+     * @return Response
      */
-    public function error($data = [])
+    public function index(Request $request, Response $response): Response
     {
-        echo $this->view->render("error", [
-            "title" => "Error",
-            "error_code" => $data['error_code']
-        ]);
+        $response->getBody()->write($this->view->render("home", [
+            "title" => "Home"
+        ]));
+        return $response;
     }
 }

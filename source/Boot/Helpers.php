@@ -1,5 +1,9 @@
 <?php
 
+function session() {
+    return new \Source\Core\Session();
+}
+
 function executeMigrations(string $instance)
 {
     echo "------------ CLASSE: " . $instance . " -----------------\n";
