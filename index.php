@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use Slim\Factory\AppFactory;
 use Source\Controllers\Error;
@@ -68,7 +69,7 @@ $errorMiddleware->setDefaultErrorHandler(function (
 function loadRouter($directory, $app) {
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
     foreach ($iterator as $file) {
-        if ($file->isFile() && pathinfo($file, PATHINFO_EXTENSION) === 'php') {
+        if ($file->isFile() && pathinfo((string) $file, PATHINFO_EXTENSION) === 'php') {
             $routeDefinition = require_once $file->getPathname();
             if (is_callable($routeDefinition)) {
                 $routeDefinition($app);

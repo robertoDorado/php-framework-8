@@ -807,7 +807,7 @@ abstract class Model
             if (!isset($data[$field])) {
                 return false;
             }
-            return true;
         }
+        return true;
     }
 }

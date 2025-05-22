@@ -38,7 +38,7 @@ abstract class DDL
         $this->reflectionClass = new ReflectionClass($this->class);
     }
 
-    public function setClassProperties()
+    public function setClassProperties(): DDL
     {
         if (!$this->reflectionClass instanceof ReflectionClass) {
             throw new \Exception("A instancia precisa ser do tipo ReflectionClass.");
@@ -65,19 +65,21 @@ abstract class DDL
         if (!in_array('id', $this->classProperties)) {
             array_unshift($this->classProperties, 'id');
         }
+
+        return $this;
     }
 
-    public function getProperties()
+    public function getProperties(): array
     {
         return $this->classProperties;
     }
 
-    public function setClassName(string $className)
+    public function setClassName(string $className): void
     {
         $this->className = $className;
     }
 
-    public function getClassName()
+    public function getClassName(): string
     {
         if (!$this->reflectionClass instanceof ReflectionClass) {
             throw new \Exception("A instancia precisa ser do tipo ReflectionClass.");
@@ -95,7 +97,7 @@ abstract class DDL
         return $this->className;
     }
 
-    public function setKeysToProperties(array $dataType)
+    public function setKeysToProperties(array $dataType): DDL
     {
         if (!$this->reflectionClass instanceof ReflectionClass) {
             throw new \Exception("A instancia precisa ser do tipo ReflectionClass.");
@@ -108,14 +110,16 @@ abstract class DDL
         foreach ($this->classProperties as $key => &$value) {
             $value = $value . " " . $dataType[$key];
         }
+
+        return $this;
     }
 
-    public function getQuery()
+    public function getQuery(): string
     {
         return $this->sql;
     }
 
-    public function executeQuery()
+    public function executeQuery(): void
     {
         if (!$this->reflectionClass instanceof ReflectionClass) {
             throw new \Exception("A instancia precisa ser do tipo ReflectionClass.");
@@ -143,26 +147,26 @@ abstract class DDL
         $executeQuery($this->sql);
     }
 
-    public function alterTable(array $params)
+    public function alterTable(array $params): DDL
     {
         $this->sql = " ALTER TABLE " . $this->getClassName() . " ";
         $this->sql .= implode(", ", $params) . ";";
         return $this;
     }
 
-    public function setForeignKeyChecks(int $int)
+    public function setForeignKeyChecks(int $int): DDL
     {
         $this->sql .= " SET FOREIGN_KEY_CHECKS=" . $int . "; ";
         return $this;
     }
 
-    public function dropTableIfExists()
+    public function dropTableIfExists(): DDL
     {
         $this->sql .= " DROP TABLE IF EXISTS " . $this->getClassName() . "; ";
         return $this;
     }
 
-    public function createTableQuery()
+    public function createTableQuery(): DDL
     {
         if (!$this->reflectionClass instanceof ReflectionClass) {
             throw new \Exception("A instancia precisa ser do tipo ReflectionClass.");
@@ -173,12 +177,13 @@ abstract class DDL
         return $this;
     }
 
-    public function setProperty(string $propName)
+    public function setProperty(string $propName): DDL
     {
         array_push($this->classProperties, $propName);
+        return $this;
     }
 
-    public function removeProperty(string $removeValue)
+    public function removeProperty(string $removeValue): void
     {
         $key = array_search($removeValue, $this->classProperties);
         if ($key !== false) {
@@ -187,7 +192,7 @@ abstract class DDL
         }
     }
 
-    public function changeValueOfProperties($key, $value)
+    public function changeValueOfProperties($key, $value): void
     {
         if (array_key_exists($key, $this->classProperties)) {
             $this->classProperties[$key] = $value;
