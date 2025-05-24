@@ -15,21 +15,24 @@ use Psr\Http\Message\ServerRequestInterface as Request;
  */
 class Error extends Controller
 {
+    /** @var array Path da View */
+    private array $path = [];
+
     /**
      * Error constructor
      */
     public function __construct()
     {
+        $this->path = ['fail', sprintf("%s/%s", CONF_VIEW_PATH, CONF_VIEW_THEME)];
         parent::__construct();
     }
     
     public function index(Request $request, Response $response, $args): Response
     {
-        $response->getBody()->write($this->view->render("error", [
+        return $this->view($response, $this->path, "fail::error", [
             "title" => "Error",
             "status_code" => $args['status_code']
-        ]));
-        return $response->withStatus($args['status_code']);
+        ], $args['status_code']);
     }
 
    /**

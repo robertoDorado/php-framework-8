@@ -12,8 +12,12 @@ use Source\Core\Controller;
  */
 class Home extends Controller
 {
+    /** @var array Path da View */
+    private array $path = [];
+
     public function __construct()
     {
+        $this->path = ["example", sprintf("%s/%s", CONF_VIEW_PATH, CONF_VIEW_THEME)];
         parent::__construct();
     }
 
@@ -29,8 +33,7 @@ class Home extends Controller
             return $response->withStatus(200);
         }
 
-        $response->getBody()->write($this->view->render("form_ajax", []));
-        return $response;
+        return $this->view($response, $this->path, "example::form_ajax");
     }
 
     public function form(Request $request, Response $response)
@@ -45,8 +48,7 @@ class Home extends Controller
             die;
         }
 
-        $response->getBody()->write($this->view->render("form", []));
-        return $response;
+        return $this->view($response, $this->path, "example::form");
     }
 
     /**
@@ -58,9 +60,6 @@ class Home extends Controller
      */
     public function index(Request $request, Response $response): Response
     {
-        $response->getBody()->write($this->view->render("home", [
-            "title" => "Home"
-        ]));
-        return $response;
+        return $this->view($response, $this->path, "example::home", ["title" => "Home"]);
     }
 }

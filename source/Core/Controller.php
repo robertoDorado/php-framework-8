@@ -6,6 +6,7 @@ use Source\Core\View;
 use Source\Support\Message;
 use Source\Support\RequestFiles;
 use Source\Support\Requests;
+use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller
 {
@@ -60,5 +61,11 @@ class Controller
     public function getServer(): Server
     {
         return $this->server;
+    }
+
+    public function view(Response $response, array $path, string $template, array $params = [], string $statusCode = ''): Response
+    {
+        $response->getBody()->write($this->view->path(...$path)->render($template, $params));
+        return !empty($statusCode) ? $response->withStatus($statusCode) : $response;
     }
 }
