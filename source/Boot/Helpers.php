@@ -20,11 +20,16 @@ function verifyRequestHttpOrigin(?string $serverOrigin)
 }
 
 
-function uploadFileData(array $requestFiles, string $filePath): void
+function uploadFileData(array $requestFile, string $filePath): void
 {
-    if (empty($requestFiles["error"])) {
+    $allowFileType = ["image/png", "image/jpg", "image/jpeg"];
+    if (!in_array($requestFile["type"], $allowFileType)) {
+        throw new Exception("Tipo de imagem inválida");
+    }
+
+    if (empty($requestFile["error"])) {
         $maxFileSize = 1 * 1024 * 1024;
-        $fileSize = $requestFiles['size'];
+        $fileSize = $requestFile['size'];
 
         if ($fileSize > $maxFileSize) {
             throw new \Exception("arquivo inválido, tamanho máximo permitido é de 1MB.");
@@ -34,14 +39,14 @@ function uploadFileData(array $requestFiles, string $filePath): void
             mkdir($filePath, 0777, true);
         }
 
-        $fileDestination = $filePath . "/" . basename($requestFiles["name"]);
-        $verifyImage = getimagesize($requestFiles["tmp_name"]);
+        $fileDestination = sprintf("%s/%s", $filePath, basename($requestFile["name"]));
+        $verifyImage = getimagesize($requestFile["tmp_name"]);
 
         if (!$verifyImage) {
             throw new \Exception("arquivo inválido");
         }
 
-        if (!move_uploaded_file($requestFiles["tmp_name"], $fileDestination)) {
+        if (!move_uploaded_file($requestFile["tmp_name"], $fileDestination)) {
             throw new \Exception("erro no upload do arquivo");
         }
     }
