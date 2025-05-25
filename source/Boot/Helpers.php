@@ -1,5 +1,65 @@
 <?php
 
+function verifyRequestHttpOrigin(?string $serverOrigin)
+{
+    $allowedOrigin = [
+        CONF_URL_BASE,
+        CONF_URL_TEST
+    ];
+
+    $origin = !empty($serverOrigin) ? $serverOrigin : '';
+    if (!in_array($origin, $allowedOrigin)) {
+        header("Content-Type: application/json");
+        http_response_code(403);
+        echo json_encode([
+            'error' => 'acesso negado',
+            'code' => 403
+        ]);
+        die;
+    }
+}
+
+
+function uploadFileData(array $requestFiles, string $filePath): void
+{
+    if (empty($requestFiles["error"])) {
+        $maxFileSize = 1 * 1024 * 1024;
+        $fileSize = $requestFiles['size'];
+
+        if ($fileSize > $maxFileSize) {
+            throw new \Exception("arquivo inválido, tamanho máximo permitido é de 1MB.");
+        }
+
+        if (!is_dir($filePath)) {
+            mkdir($filePath, 0777, true);
+        }
+
+        $fileDestination = $filePath . "/" . basename($requestFiles["name"]);
+        $verifyImage = getimagesize($requestFiles["tmp_name"]);
+
+        if (!$verifyImage) {
+            throw new \Exception("arquivo inválido");
+        }
+
+        if (!move_uploaded_file($requestFiles["tmp_name"], $fileDestination)) {
+            throw new \Exception("erro no upload do arquivo");
+        }
+    }
+}
+
+function dumpAndDie($data)
+{
+    var_dump($data);
+    die;
+}
+
+function printData($data) 
+{
+    echo "<pre/>";
+    print_r($data);
+    die;
+}
+
 function session() {
     return new \Source\Core\Session();
 }
