@@ -116,4 +116,17 @@ class Session
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
         }
     }
+
+    public function checkCsrfToken(string $tokenReceived): bool
+    {
+        if (empty($this->csrf_token) || empty($tokenReceived)) {
+            return false;
+        }
+
+        if ($tokenReceived !== $this->csrf_token) {
+            return false;
+        }
+
+        return true;
+    }
 }
